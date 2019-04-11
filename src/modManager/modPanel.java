@@ -1,13 +1,18 @@
 package modManager;
 
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -17,13 +22,15 @@ import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.Timer;
+import javax.swing.border.Border;
+import javax.swing.border.LineBorder;
 
 public class modPanel extends JPanel implements ActionListener{
 
 	modFrame frame;
 	JProgressBar progressBar;
 	modManager mm;
-	DefaultListModel<JLabel> modListModel;
+	//DefaultListModel<JLabel> modListModel;
 	DefaultListModel<String> logListModel;
 	
 	
@@ -32,13 +39,11 @@ public class modPanel extends JPanel implements ActionListener{
 	modPanel(modFrame f) throws InterruptedException{
 		frame = f;
 		
-		GridBagConstraints c = new GridBagConstraints();
-		c.anchor = GridBagConstraints.FIRST_LINE_START;
+		setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 		
-		setLayout(new GridBagLayout());
-		addProgressBar(c);
-		addButtons(c);
-		addLists(c);
+		addProgressBar();
+		addButtons();
+		addLists();
 		
 		
 		mm = new modManager();
@@ -47,20 +52,14 @@ public class modPanel extends JPanel implements ActionListener{
 		Timer timer = new Timer(5, this);
 		timer.start();
 		
-		setFocusable(true);
-		
-		
-		
-
-		
-		
-		
+		setFocusable(true);	
+		frame.setSize(frame.getWidth() + 30, frame.getHeight() + 1);
 	}
 
 	
 	void update(){
 		if(!progressBar.getString().equals("Current task progress")) {
-			progressBar.setString(progressBar.getString().replace("" + (int)Math.round(progressBar.getPercentComplete()* 100), "") + (int)Math.round(progressBar.getPercentComplete()* 100));
+			progressBar.setString(progressBar.getString().replace("" + (int)Math.round(progressBar.getPercentComplete()* 100) + "%", "") + (int)Math.round(progressBar.getPercentComplete()* 100)+ "%");
 		}
 		
 		
@@ -72,46 +71,51 @@ public class modPanel extends JPanel implements ActionListener{
 		update();
 	}
 	
-	public void addButtons(GridBagConstraints c) {
-		c.gridwidth = 1;
-		c.gridx = 2;
-		c.gridy = 1;
-		JButton update;
-		update = new JButton("Update");
-		update.setBounds(0, 0, 50, 50);
-		update.setFocusable(false);
-		//update.setEnabled(false);
+	public void addButtons() {
 		
-		this.add(update, c);
+		JPanel buttonPane = new JPanel();
+		;
+		buttonPane.setPreferredSize(new Dimension(frame.getWidth(), 50));
+
+		GridLayout buttonLayout = new GridLayout(1,0);
+		buttonLayout.setVgap(15);
+		buttonLayout.setHgap(10);
+		buttonPane.setLayout(buttonLayout);
 		
 		
-		c.gridx = 0;
-		c.gridy = 1;
 		JButton enable;
 		enable = new JButton("Enable");
-		enable.setBounds(0, 0, 50, 50);
+		enable.setBounds(5, 5, 5, 5);
+		enable.setPreferredSize(new Dimension(5,5));
 		enable.setFocusable(false);
-		this.add(enable, c);
+		buttonPane.add(enable);
 		
 
-		c.gridx = 1;
-		c.gridy = 1;
+		
 		JButton disable;
 		disable = new JButton("Disable");
-		disable.setBounds(0, 0, 50, 50);
+		disable.setPreferredSize(new Dimension(5,5));
+		disable.setBounds(0, 0, 50, 5);
 		disable.setFocusable(false);
-		this.add(disable, c);
+		buttonPane.add(disable);
 		
-
-		c.gridx = 3;
-		c.gridy = 1;
+		
 		JButton cfu;
 		cfu = new JButton("Check for updates");
-		cfu.setBounds(0, 0, 50, 50);
+		cfu.setPreferredSize(new Dimension(5,5));
+		cfu.setBounds(0, 0, 50, 5);
 		cfu.setFocusable(false);
-		this.add(cfu, c);
+		buttonPane.add(cfu);
 		
+		JButton update;
+		update = new JButton("Update");
+		update.setBounds(0, 0, 50, 5);
+		update.setPreferredSize(new Dimension(5,5));
+		update.setFocusable(false);
+		update.setEnabled(false);
+		buttonPane.add(update);
 		
+		this.add(buttonPane);
 		
 		
 		update.addActionListener(new ActionListener()
@@ -125,87 +129,100 @@ public class modPanel extends JPanel implements ActionListener{
 		});
 	}
 	
-	public void addLists(GridBagConstraints c) {
+	public void addLists() {
 		
-		JPanel test;
-		test = new JPanel();
-		test.setLayout(new GridBagLayout());
-		test.setAlignmentX(Component.LEFT_ALIGNMENT);
-		
-		GridBagConstraints d = new GridBagConstraints();
-		modListModel = new DefaultListModel<JLabel>();
-		JList<JLabel> modListJList = new JList<JLabel>(modListModel);
-		d.anchor = GridBagConstraints.FIRST_LINE_START;
-		d.fill = GridBagConstraints.HORIZONTAL;
-		d.gridx = 0;
-		d.gridy = 0;
-		
-		JLabel blue = new JLabel("testing");
-		
-		test.add(blue, d);
-		d.gridx = 1;
-		test.add(new JCheckBox(), d);
-		d.gridx = 0;
-		d.gridy = 1;
-		test.add(new JLabel("yeet"), d);
-		d.gridx = 1;
-		test.add(new JCheckBox(), d);
-		d.gridx = 0;
-		d.gridy = 2;
-		test.add(new JLabel("yeet"), d);
-		d.gridx = 1;
-		test.add(new JCheckBox(), d);
-		d.gridx = 0;
-		d.gridy = 3;
-		test.add(new JLabel("yeet"), d);
-		d.gridx = 1;
-		test.add(new JCheckBox(), d);
-		d.gridx = 0;
-		d.gridy = 4;
-		test.add(new JLabel("yeet"), d);
-		d.gridx = 1;
-		test.add(new JCheckBox(), d);
-		d.gridx = 0;
-		d.gridy = 5;
-		test.add(new JLabel("yeet"), d);
-		d.gridx = 1;
-		test.add(new JCheckBox(), d);
+		JPanel listPane = new JPanel();
+		listPane.setBounds(0, 0, 500, 50);
+		listPane.setPreferredSize(new Dimension(frame.getWidth(), 400));
+		GridLayout listLayout = new GridLayout(1,0);
+		listLayout.setVgap(15);
+		listLayout.setHgap(100);
+		listPane.setLayout(listLayout);
 		
 		
-		test.add(modListJList);
+		JPanel modPane = new JPanel();
+		modPane.setPreferredSize(new Dimension(frame.getWidth() / 2 - 150, 40));
+		modPane.setLayout(new GridLayout(0, 2));
 		
-	    JScrollPane modScrollList = new JScrollPane(test);
+		JPanel modListPane = new JPanel();
+		modListPane.setLayout(new BoxLayout(modListPane, BoxLayout.PAGE_AXIS));
+		modListPane.setSize(new Dimension(modPane.getWidth() - 25, 40));
+		modListPane.setPreferredSize(new Dimension(modPane.getWidth() - 25, 40));
+		Border insideBorder = BorderFactory.createLineBorder(Color.BLACK);
+		modListPane.setBorder(insideBorder);
+		modPane.add(modListPane);
+		
+		JPanel checkListPane = new JPanel();
+		checkListPane.setSize(new Dimension(25,40));
+		checkListPane.setPreferredSize(new Dimension(25,40));
+		checkListPane.setLayout(new BoxLayout(checkListPane, BoxLayout.PAGE_AXIS));
+		insideBorder = BorderFactory.createLineBorder(Color.RED);
+		checkListPane.setBorder(insideBorder);
+		modPane.add(checkListPane);
+		
+		
+		JScrollPane modScrollList = new JScrollPane(modPane);
+		
+		
+		checkListPane.add(new JCheckBox());
+		checkListPane.add(new JCheckBox());
+		checkListPane.add(new JCheckBox());
+		checkListPane.add(new JCheckBox());
+		checkListPane.add(new JCheckBox());
+		checkListPane.add(new JCheckBox());
+		checkListPane.add(new JCheckBox());
+		checkListPane.add(new JCheckBox());
+		checkListPane.add(new JCheckBox());
+		checkListPane.add(new JCheckBox());
+		
+		modListPane.add(new JLabel("test"));
+		modListPane.add(new JLabel("test"));
+		modListPane.add(new JLabel("test"));
+		modListPane.add(new JLabel("test"));
+		modListPane.add(new JLabel("test"));
+		modListPane.add(new JLabel("test"));
+		modListPane.add(new JLabel("test"));
+		modListPane.add(new JLabel("test"));
+		modListPane.add(new JLabel("test"));
+		modListPane.add(new JLabel("test"));
+		
+		
 	    
-	    c.fill = GridBagConstraints.HORIZONTAL;
-		c.gridx = 0;
-		c.gridy = 3;
-		c.gridwidth = 2;
-		modScrollList.setBounds(50, 50, 5, 5);
-		modScrollList.setPreferredSize(new Dimension(100,125));
-		this.add(modScrollList, c);
+		
+	   
+	    
+	    Border outsideBorder = BorderFactory.createEmptyBorder(10, 10, 10, 10);
+	    insideBorder = BorderFactory.createLineBorder(Color.BLACK);
+	    modScrollList.setBorder(BorderFactory.createCompoundBorder(outsideBorder, insideBorder));
+	    
+		listPane.add(modScrollList);
 		
 		logListModel = new DefaultListModel<String>();
 		JList<String> logListJList = new JList<String>(logListModel);
 	    JScrollPane logScrollList = new JScrollPane(logListJList);
 	    
-	    c.fill = GridBagConstraints.HORIZONTAL;
-		c.gridx = 2;
-		c.gridy = 3;
-		c.gridwidth = 2;
-		logScrollList.setBounds(0, 0, 500, 50);
-		this.add(logScrollList, c);
+	
+	    logScrollList.setBorder(BorderFactory.createCompoundBorder(outsideBorder, insideBorder));
+	    
+	    listPane.add(logScrollList);
+	    
+	    logListModel.addElement("test");
+	   
+	    
+	    add(listPane);
+	   
+		
 	}
 	
-	public void addProgressBar(GridBagConstraints c) {
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.gridx = 0;
-		c.gridy = 0;
-		c.gridwidth = 5;
+	public void addProgressBar() {
 		progressBar = new JProgressBar(0, 100);
 	    progressBar.setValue(0);
-	    progressBar.setBounds(0, 0, 50, 50);
+	    Border outsideBorder = BorderFactory.createEmptyBorder(10, 10, 10, 10);
+	    Border insideBorder = BorderFactory.createLineBorder(Color.BLACK);
+	    progressBar.setBorder(BorderFactory.createCompoundBorder(outsideBorder, insideBorder));
+	    progressBar.setPreferredSize(new Dimension(900, 50));
 		progressBar.setStringPainted(true);
 		progressBar.setString("Current task progress");
-		this.add(progressBar, c);
+		add(progressBar);
 	}
 }
