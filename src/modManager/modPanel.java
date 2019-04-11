@@ -2,11 +2,7 @@ package modManager;
 
 
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -21,9 +17,9 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
+import javax.swing.SpringLayout;
 import javax.swing.Timer;
 import javax.swing.border.Border;
-import javax.swing.border.LineBorder;
 
 public class modPanel extends JPanel implements ActionListener{
 
@@ -32,6 +28,7 @@ public class modPanel extends JPanel implements ActionListener{
 	modManager mm;
 	//DefaultListModel<JLabel> modListModel;
 	DefaultListModel<String> logListModel;
+	JPanel modPane;
 	
 	
 	
@@ -74,7 +71,7 @@ public class modPanel extends JPanel implements ActionListener{
 	public void addButtons() {
 		
 		JPanel buttonPane = new JPanel();
-		;
+		
 		buttonPane.setPreferredSize(new Dimension(frame.getWidth(), 50));
 
 		GridLayout buttonLayout = new GridLayout(1,0);
@@ -131,6 +128,8 @@ public class modPanel extends JPanel implements ActionListener{
 	
 	public void addLists() {
 		
+		Border insideBorder;
+		
 		JPanel listPane = new JPanel();
 		listPane.setBounds(0, 0, 500, 50);
 		listPane.setPreferredSize(new Dimension(frame.getWidth(), 400));
@@ -140,51 +139,25 @@ public class modPanel extends JPanel implements ActionListener{
 		listPane.setLayout(listLayout);
 		
 		
-		JPanel modPane = new JPanel();
-		modPane.setPreferredSize(new Dimension(frame.getWidth() / 2 - 150, 40));
-		modPane.setLayout(new GridLayout(0, 2));
+		modPane = new JPanel();
+		modPane.setSize(listPane.getWidth(), listPane.getHeight());
 		
-		JPanel modListPane = new JPanel();
-		modListPane.setLayout(new BoxLayout(modListPane, BoxLayout.PAGE_AXIS));
-		modListPane.setSize(new Dimension(modPane.getWidth() - 25, 40));
-		modListPane.setPreferredSize(new Dimension(modPane.getWidth() - 25, 40));
-		Border insideBorder = BorderFactory.createLineBorder(Color.BLACK);
-		modListPane.setBorder(insideBorder);
-		modPane.add(modListPane);
-		
-		JPanel checkListPane = new JPanel();
-		checkListPane.setSize(new Dimension(25,40));
-		checkListPane.setPreferredSize(new Dimension(25,40));
-		checkListPane.setLayout(new BoxLayout(checkListPane, BoxLayout.PAGE_AXIS));
-		insideBorder = BorderFactory.createLineBorder(Color.RED);
-		checkListPane.setBorder(insideBorder);
-		modPane.add(checkListPane);
+		SpringLayout layout = new SpringLayout();
+		modPane.setLayout(layout);
 		
 		
 		JScrollPane modScrollList = new JScrollPane(modPane);
 		
 		
-		checkListPane.add(new JCheckBox());
-		checkListPane.add(new JCheckBox());
-		checkListPane.add(new JCheckBox());
-		checkListPane.add(new JCheckBox());
-		checkListPane.add(new JCheckBox());
-		checkListPane.add(new JCheckBox());
-		checkListPane.add(new JCheckBox());
-		checkListPane.add(new JCheckBox());
-		checkListPane.add(new JCheckBox());
-		checkListPane.add(new JCheckBox());
 		
-		modListPane.add(new JLabel("test"));
-		modListPane.add(new JLabel("test"));
-		modListPane.add(new JLabel("test"));
-		modListPane.add(new JLabel("test"));
-		modListPane.add(new JLabel("test"));
-		modListPane.add(new JLabel("test"));
-		modListPane.add(new JLabel("test"));
-		modListPane.add(new JLabel("test"));
-		modListPane.add(new JLabel("test"));
-		modListPane.add(new JLabel("test"));
+		
+		
+		
+		
+		
+		
+		
+
 		
 		
 	    
@@ -209,8 +182,8 @@ public class modPanel extends JPanel implements ActionListener{
 	    logListModel.addElement("test");
 	   
 	    
+	    
 	    add(listPane);
-	   
 		
 	}
 	
@@ -224,5 +197,27 @@ public class modPanel extends JPanel implements ActionListener{
 		progressBar.setStringPainted(true);
 		progressBar.setString("Current task progress");
 		add(progressBar);
+	}
+	
+	public void addModToList(String name) {
+		SpringLayout layout = (SpringLayout) modPane.getLayout();
+		int jumpHeight = 20;
+		
+		JLabel newLabel = new JLabel(name);
+		newLabel.setName(name);
+		JCheckBox newBox = new JCheckBox();
+		newBox.setName(name);
+		
+		layout.putConstraint(SpringLayout.WEST, newLabel, 5, SpringLayout.WEST, frame.getContentPane());
+		layout.putConstraint(SpringLayout.WEST, newBox, modPane.getWidth() - 125, SpringLayout.WEST, frame.getContentPane());
+		
+		
+		layout.putConstraint(SpringLayout.NORTH,  newLabel, (modPane.getComponents().length / 2) * jumpHeight, SpringLayout.NORTH, frame.getContentPane());
+		layout.putConstraint(SpringLayout.NORTH,  newBox, (modPane.getComponents().length / 2) * jumpHeight, SpringLayout.NORTH, frame.getContentPane());
+		
+		modPane.add(newLabel);
+		modPane.add(newBox);
+		modPane.setPreferredSize(new Dimension(modPane.getWidth(), modPane.getHeight() + jumpHeight));
+		modPane.setSize(new Dimension(modPane.getWidth(), modPane.getHeight() + jumpHeight));
 	}
 }
