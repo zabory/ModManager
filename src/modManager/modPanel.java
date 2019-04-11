@@ -2,6 +2,7 @@ package modManager;
 
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -42,15 +43,16 @@ public class modPanel extends JPanel implements ActionListener{
 		addButtons();
 		addLists();
 		
-		
 		mm = new modManager();
 		mm.start();
 		
 		Timer timer = new Timer(5, this);
 		timer.start();
 		
-		setFocusable(true);	
+		setFocusable(true);
 		frame.setSize(frame.getWidth() + 30, frame.getHeight() + 1);
+		
+		
 	}
 
 	
@@ -58,6 +60,7 @@ public class modPanel extends JPanel implements ActionListener{
 		if(!progressBar.getString().equals("Current task progress")) {
 			progressBar.setString(progressBar.getString().replace("" + (int)Math.round(progressBar.getPercentComplete()* 100) + "%", "") + (int)Math.round(progressBar.getPercentComplete()* 100)+ "%");
 		}
+//		logListModel.addElement("test");
 		
 		
 	}
@@ -179,7 +182,6 @@ public class modPanel extends JPanel implements ActionListener{
 	    
 	    listPane.add(logScrollList);
 	    
-	    logListModel.addElement("test");
 	   
 	    
 	    
@@ -204,10 +206,9 @@ public class modPanel extends JPanel implements ActionListener{
 		int jumpHeight = 20;
 		
 		JLabel newLabel = new JLabel(name);
-		newLabel.setName(name);
+		newLabel.setName(name + "label");
 		JCheckBox newBox = new JCheckBox();
 		newBox.setName(name);
-		
 		layout.putConstraint(SpringLayout.WEST, newLabel, 5, SpringLayout.WEST, frame.getContentPane());
 		layout.putConstraint(SpringLayout.WEST, newBox, modPane.getWidth() - 125, SpringLayout.WEST, frame.getContentPane());
 		
@@ -219,5 +220,15 @@ public class modPanel extends JPanel implements ActionListener{
 		modPane.add(newBox);
 		modPane.setPreferredSize(new Dimension(modPane.getWidth(), modPane.getHeight() + jumpHeight));
 		modPane.setSize(new Dimension(modPane.getWidth(), modPane.getHeight() + jumpHeight));
+	}
+	
+	public Component getComponent(String name) {
+		Component f = null;
+		for(Component x : modPane.getComponents()) {
+			if(x.getName().equals(name)){
+				f = x;
+			}
+		}
+		return f;
 	}
 }
