@@ -47,14 +47,19 @@ public class modPanel extends JPanel implements ActionListener{
 		addButtons();
 		addLists();
 		
-		mm = new modManager();
+		
+		
+		mm = new modManager(this);
 		mm.start();
+		
+		mm.
 		
 		Timer timer = new Timer(5, this);
 		timer.start();
 		
 		setFocusable(true);
 		frame.setSize(frame.getWidth() + 30, frame.getHeight() + 1);
+		
 		
 		
 	}
@@ -155,7 +160,7 @@ public class modPanel extends JPanel implements ActionListener{
 		
 		JScrollPane modScrollList = new JScrollPane(modPane);
 		
-		
+		modPane.setBackground(Color.WHITE);
 	   
 	    
 	    Border outsideBorder = BorderFactory.createEmptyBorder(10, 10, 10, 10);
@@ -173,7 +178,6 @@ public class modPanel extends JPanel implements ActionListener{
 	    
 	    listPane.add(logScrollList);
 	    
-	   
 	    
 	    
 	    add(listPane);
