@@ -24,6 +24,10 @@ import javax.swing.border.Border;
 
 public class modPanel extends JPanel implements ActionListener{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3658750723915586007L;
 	modFrame frame;
 	JProgressBar progressBar;
 	modManager mm;
@@ -151,19 +155,6 @@ public class modPanel extends JPanel implements ActionListener{
 		
 		JScrollPane modScrollList = new JScrollPane(modPane);
 		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-
-		
-		
-	    
 		
 	   
 	    

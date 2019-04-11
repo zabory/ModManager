@@ -7,6 +7,10 @@ import javax.swing.JFrame;
 
 public class modFrame extends JFrame{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2570785036817567606L;
 	modPanel shp;
 	
 	modFrame() throws InterruptedException{
