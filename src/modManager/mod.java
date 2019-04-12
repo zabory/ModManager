@@ -1,5 +1,6 @@
 package modManager;
 
+import java.awt.Color;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -24,7 +25,6 @@ public class mod {
 	
 	public mod(String modFileName) {
 		this.modFileName = modFileName;
-		//checkUpdate();
 	}
 	
 	public void newMod() {
@@ -47,12 +47,19 @@ public class mod {
 		
 		for(int x = 0; x < t.length; x++) {
 			t[x] = new URLTester("https://minecraft.curseforge.com/projects/" + names.get(x) + "/files");
-			t[x].run();
+			t[x].start();
 		}
 		
 		
 		
 		
+	}
+	
+	public String getFileName() {
+		return modFileName;
+	}
+	public String getName() {
+		return modName;
 	}
 	
 	public static ArrayList<String> getPossibleNames(String name) {
@@ -149,8 +156,8 @@ public class mod {
 		//Makes modName everything up to numbers
 		modName = modName.substring(0,nameEnd);
 		//removes any a - or _ if its at the very end
-		if(modName.charAt(modName.length()) == '_' ||
-				modName.charAt(modName.length()) == '-') {
+		if(modName.charAt(modName.length() - 1) == '_' ||
+				modName.charAt(modName.length() - 1) == '-') {
 			modName = modName.substring(0,modName.length() - 1);
 		}
 		
@@ -205,6 +212,7 @@ public class mod {
 		        	}
 		        }
 		        
+		        modName = "<html><font color='blue'>" + modName + "</font></html>";
 		        br.close();
 				
 			} catch (MalformedURLException e) {

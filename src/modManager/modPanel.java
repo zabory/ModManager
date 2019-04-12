@@ -18,9 +18,12 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.SpringLayout;
 import javax.swing.Timer;
+import javax.swing.UIManager;
 import javax.swing.border.Border;
+import javax.swing.border.TitledBorder;
 
 public class modPanel extends JPanel implements ActionListener{
 
@@ -31,10 +34,8 @@ public class modPanel extends JPanel implements ActionListener{
 	modFrame frame;
 	JProgressBar progressBar;
 	modManager mm;
-	//DefaultListModel<JLabel> modListModel;
-	DefaultListModel<String> logListModel;
 	JPanel modPane;
-	
+	JTextArea jta;
 	
 	
 	
@@ -51,16 +52,14 @@ public class modPanel extends JPanel implements ActionListener{
 		
 		mm = new modManager(this);
 		mm.start();
-		
-		mm.
-		
+
 		Timer timer = new Timer(5, this);
 		timer.start();
 		
 		setFocusable(true);
 		frame.setSize(frame.getWidth() + 30, frame.getHeight() + 1);
 		
-		
+		mm.setMessage("updateModList");
 		
 	}
 
@@ -69,9 +68,8 @@ public class modPanel extends JPanel implements ActionListener{
 		if(!progressBar.getString().equals("Current task progress")) {
 			progressBar.setString(progressBar.getString().replace("" + (int)Math.round(progressBar.getPercentComplete()* 100) + "%", "") + (int)Math.round(progressBar.getPercentComplete()* 100)+ "%");
 		}
-//		logListModel.addElement("test");
 		
-		
+		mm.update();
 	}
 	
 	
@@ -169,12 +167,19 @@ public class modPanel extends JPanel implements ActionListener{
 	    
 		listPane.add(modScrollList);
 		
-		logListModel = new DefaultListModel<String>();
-		JList<String> logListJList = new JList<String>(logListModel);
-	    JScrollPane logScrollList = new JScrollPane(logListJList);
-	    
+		jta = new JTextArea();
+		
+		jta.setLineWrap(true);
+		jta.setWrapStyleWord(true);
+		jta.setEditable(false);
+		outsideBorder = BorderFactory.createEmptyBorder(0, 0, 10, 0);
+		
+		TitledBorder TA_border_title = new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Log",
+				TitledBorder.LEADING, TitledBorder.TOP, null, Color.BLACK);
+		
+		JScrollPane logScrollList = new JScrollPane(jta);
 	
-	    logScrollList.setBorder(BorderFactory.createCompoundBorder(outsideBorder, insideBorder));
+	    logScrollList.setBorder(BorderFactory.createCompoundBorder(outsideBorder, TA_border_title));
 	    
 	    listPane.add(logScrollList);
 	    
@@ -196,6 +201,11 @@ public class modPanel extends JPanel implements ActionListener{
 		add(progressBar);
 	}
 	
+	
+	public void setModStatus(Component j, String n) {
+		j.setName(n);
+	}
+	
 	public void addModToList(String name) {
 		SpringLayout layout = (SpringLayout) modPane.getLayout();
 		int jumpHeight = 20;
@@ -215,6 +225,14 @@ public class modPanel extends JPanel implements ActionListener{
 		modPane.add(newBox);
 		modPane.setPreferredSize(new Dimension(modPane.getWidth(), modPane.getHeight() + jumpHeight));
 		modPane.setSize(new Dimension(modPane.getWidth(), modPane.getHeight() + jumpHeight));
+	}
+	
+	public void addToLog(String s) {
+		if(jta.getText().equals("")) {
+			jta.setText(s);
+		}else {
+			jta.setText(jta.getText() + "\n" + s);
+		}
 	}
 	
 	public Component getComponent(String name) {
