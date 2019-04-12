@@ -2,12 +2,17 @@ package modManager;
 
 import java.awt.Color;
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class mod {
 	
@@ -22,20 +27,66 @@ public class mod {
 	//This will determine if the mod is up to date or not 
 	boolean isUpToDate;
 	
+	final static String MOD_FILE_NAME_PATH = "config\\modManager\\modNames.cfg";
+	final static String MOD_FILE_URL_PATH = "config\\modManager\\modURLs.cfg";
+	
 	
 	public mod(String modFileName) {
 		this.modFileName = modFileName;
+		modName = "";
+		modURL = "";
+		
+		File fileNames = new File(MOD_FILE_NAME_PATH);
+		File URLs = new File(MOD_FILE_URL_PATH);
+		//search modFileNames.cfg for mod name
+		try {
+			String wholeFile = "";
+			Scanner fileIn = new Scanner(fileNames);
+			String input;
+			while(fileIn.hasNextLine()) {
+				input = fileIn.nextLine();
+				wholeFile = wholeFile + input + "\n";
+				if(input.contains(modFileName)) {
+					modName = input.replaceAll(modFileName + ":","");
+				}
+			}
+			fileIn.close();
+			
+			if(modName.equals("")) {
+				findModName();
+				PrintWriter out = new PrintWriter(MOD_FILE_NAME_PATH);
+				out.println(wholeFile + modFileName + ":" + modName);
+				out.flush();
+				out.close();
+			}
+			
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		//search for URL
+		try {
+			Scanner fileIn = new Scanner(URLs);
+			String input;
+			while(fileIn.hasNextLine()) {
+				input = fileIn.nextLine();
+				if(input.contains(modFileName)) {
+					modURL = input.replaceAll(modFileName + ":","");
+				}
+			}
+			fileIn.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		
+		if(modURL.equals("")) {
+			//findURL();
+		}
+		
 	}
 	
-	public void newMod() {
-		findModName();
-		findURL();
-	}
+
 	
-	public void existingMod(String modName, String modURL) {
-		this.modName = modName;
-		this.modURL = modURL;
-	}
+	
 	
 	/**
 	 * 

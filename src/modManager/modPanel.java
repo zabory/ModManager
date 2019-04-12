@@ -8,13 +8,12 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
-import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
@@ -48,11 +47,12 @@ public class modPanel extends JPanel implements ActionListener{
 		addButtons();
 		addLists();
 		
-		
+		addSelectAll();
 		
 		mm = new modManager(this);
 		mm.start();
 
+		
 		Timer timer = new Timer(5, this);
 		timer.start();
 		
@@ -68,6 +68,8 @@ public class modPanel extends JPanel implements ActionListener{
 		if(!progressBar.getString().equals("Current task progress")) {
 			progressBar.setString(progressBar.getString().replace("" + (int)Math.round(progressBar.getPercentComplete()* 100) + "%", "") + (int)Math.round(progressBar.getPercentComplete()* 100)+ "%");
 		}
+		
+		
 		
 		mm.update();
 	}
@@ -227,6 +229,56 @@ public class modPanel extends JPanel implements ActionListener{
 		modPane.setSize(new Dimension(modPane.getWidth(), modPane.getHeight() + jumpHeight));
 	}
 	
+	public void addSelectAll() {
+		String name = "Select all";
+		SpringLayout layout = (SpringLayout) modPane.getLayout();
+		int jumpHeight = 20;
+		
+		JLabel newLabel = new JLabel(name);
+		newLabel.setName(name + "label");
+		JCheckBox newBox = new JCheckBox();
+		ActionListener actionListener = new ActionListener() {
+		      public void actionPerformed(ActionEvent actionEvent) {
+		        AbstractButton abstractButton = (AbstractButton) actionEvent.getSource();
+		        boolean selected = abstractButton.getModel().isSelected();
+		       if(selected) {
+		    	   selectAll();
+		       }else {
+		    	   deselectAll();
+		       }
+		      }
+		    };
+		newBox.addActionListener(actionListener);
+		
+		newBox.setName(name);
+		layout.putConstraint(SpringLayout.WEST, newLabel, 5, SpringLayout.WEST, frame.getContentPane());
+		layout.putConstraint(SpringLayout.WEST, newBox, modPane.getWidth() - 125, SpringLayout.WEST, frame.getContentPane());
+		
+		layout.putConstraint(SpringLayout.NORTH,  newLabel, (modPane.getComponents().length / 2) * jumpHeight, SpringLayout.NORTH, frame.getContentPane());
+		layout.putConstraint(SpringLayout.NORTH,  newBox, (modPane.getComponents().length / 2) * jumpHeight, SpringLayout.NORTH, frame.getContentPane());
+		
+		modPane.add(newLabel);
+		modPane.add(newBox);
+		modPane.setPreferredSize(new Dimension(modPane.getWidth(), modPane.getHeight() + jumpHeight));
+		modPane.setSize(new Dimension(modPane.getWidth(), modPane.getHeight() + jumpHeight));
+	}
+	
+	
+	public void selectAll() {
+		Component[] c = modPane.getComponents();
+		for(int i = 1; i < c.length; i += 2) {
+			JCheckBox current = (JCheckBox)c[i];
+			current.setSelected(true);
+		}
+	}
+	
+	public void deselectAll() {
+		Component[] c = modPane.getComponents();
+		for(int i = 1; i < c.length; i += 2) {
+			JCheckBox current = (JCheckBox)c[i];
+			current.setSelected(false);
+		}
+	}
 	public void addToLog(String s) {
 		if(jta.getText().equals("")) {
 			jta.setText(s);

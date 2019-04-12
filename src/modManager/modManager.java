@@ -7,6 +7,8 @@ import java.util.ArrayList;
 public class modManager extends Thread{
 
 	final static String CONFIG_FILE_PATH = "config\\modManager\\modManager.cfg";
+	final static String MOD_FILE_NAME_PATH = "config\\modManager\\modNames.cfg";
+	final static String MOD_FILE_URL_PATH = "config\\modManager\\modURLs.cfg";
 	final static String MOD_FILE_FOLDER = "mods";
 	
 	ArrayList<mod> mods;
@@ -21,34 +23,32 @@ public class modManager extends Thread{
 		
 		mods = new ArrayList<mod>();
 		
-		File configFile = new File(CONFIG_FILE_PATH);
 		File modFolder = new File(MOD_FILE_FOLDER);
+		File[] dataFiles = new File[3];
+		
+		dataFiles[0] = new File(CONFIG_FILE_PATH);
+		dataFiles[1] = new File(MOD_FILE_NAME_PATH);
+		dataFiles[2] = new File(MOD_FILE_URL_PATH);
 		
 		if(!modFolder.exists()) {
-			panel.addToLog("Creating mods folder");
 			modFolder.mkdir();
 		}
 		
-		
-		
-		if(!configFile.exists()) {
-			panel.addToLog("Creating config file");
-			configFile.getParentFile().mkdirs();
-			try {
-				configFile.createNewFile();
-			} catch (IOException e) {
-				e.printStackTrace();
+		for(File x : dataFiles) {
+			if(!x.exists()) {
+				x.getParentFile().mkdirs();
+				try {
+					x.createNewFile();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
 		}
-		
-		
 	}
 	
 	
 	public void update() {
-		for(mod x : mods) {
-			panel.setModStatus(panel.getComponent(x.getName()), x.getName());
-		}
+		
 	}
 	
 	public void run() {
@@ -71,9 +71,8 @@ public class modManager extends Thread{
 		
 		for(File x : modsFile.listFiles()) {
 			mod current = new mod(x.getName());
-			current.newMod();
 			mods.add(current);
-			panel.addModToList(x.getName());
+			panel.addModToList(current.getName());
 		}
 		
 		
