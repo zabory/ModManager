@@ -26,12 +26,14 @@ public class mod {
 	String recievedFileName;
 	//This will determine if the mod is up to date or not 
 	boolean isUpToDate;
+	int enabledState;
 	
 	final static String MOD_FILE_NAME_PATH = "config\\modManager\\modNames.cfg";
 	final static String MOD_FILE_URL_PATH = "config\\modManager\\modURLs.cfg";
 	
 	
 	public mod(String mFName) {
+		enabledState = -1;
 		this.modFileName = mFName;
 		mFName = mFName.replace(".disabled", "");
 		modName = "";
@@ -80,26 +82,17 @@ public class mod {
 		}
 		
 		if(modURL.equals("")) {
-			//findURL();
+			findURL();
+			
+
 		}
 		
 	}
 	
-
-	/**
-	 * -1 means cant get status
-	 * 4 means disabled
-	 * @return
-	 */
-	public int getStatus() {
-		if(modFileName.contains(".disabled")) {
-			return 4;
-		}
-		return -1;
+	public int getEnabledState() {
+		return enabledState;
 	}
 	
-	
-
 	public void rename(String name) {
 		File f = new File("mods\\" + modFileName);
 		f.renameTo(new File("mods\\" + name));
@@ -118,7 +111,7 @@ public class mod {
 		
 		for(int x = 0; x < t.length; x++) {
 			t[x] = new URLTester("https://minecraft.curseforge.com/projects/" + names.get(x) + "/files");
-			t[x].start();
+			t[x].run();
 		}
 		
 		
@@ -283,8 +276,25 @@ public class mod {
 		        	}
 		        }
 		        
-		        modName = "<html><font color='blue'>" + modName + "</font></html>";
+		        
 		        br.close();
+		        
+		        PrintWriter out;
+		        String wholeFile = "";
+		        Scanner input = new Scanner(new File(MOD_FILE_URL_PATH));
+		        while(input.hasNextLine()) {
+		        	wholeFile = wholeFile + input.nextLine() + "\n";
+		        }
+				input.close();
+				
+		        try {
+					out = new PrintWriter(MOD_FILE_URL_PATH);
+					out.println(wholeFile + modFileName.replace(".disabled", "") + ":" + modURL);
+					out.flush();
+					out.close();
+				} catch (FileNotFoundException e) {
+					e.printStackTrace();
+				}
 				
 			} catch (MalformedURLException e) {
 				e.printStackTrace();

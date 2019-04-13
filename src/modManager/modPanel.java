@@ -132,7 +132,16 @@ public class modPanel extends JPanel implements ActionListener{
 		update.addActionListener(new ActionListener()
 		{
 			@Override
-			public void actionPerformed(java.awt.event.ActionEvent arg0)
+			public void actionPerformed(ActionEvent arg0)
+			{
+				
+			}
+		});
+		
+		cfu.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent arg0)
 			{
 				
 			}
