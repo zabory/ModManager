@@ -7,6 +7,7 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
@@ -53,7 +54,7 @@ public class modPanel extends JPanel implements ActionListener{
 		mm.start();
 
 		
-		Timer timer = new Timer(5, this);
+		Timer timer = new Timer(500, this);
 		timer.start();
 		
 		setFocusable(true);
@@ -70,14 +71,15 @@ public class modPanel extends JPanel implements ActionListener{
 		}
 		
 		
-		
-		mm.update();
+		if(mm.free) {
+			mm.update();
+		}
 	}
 	
 	
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		update();
+		//update();
 	}
 	
 	public void addButtons() {
@@ -132,10 +134,62 @@ public class modPanel extends JPanel implements ActionListener{
 			@Override
 			public void actionPerformed(java.awt.event.ActionEvent arg0)
 			{
-				progressBar.setString("Searching for mods:");
-				progressBar.setValue(progressBar.getValue() + 1);
+				
 			}
 		});
+		
+		enable.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				enableMods();
+				
+			}
+						
+		});
+		
+		disable.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				disableMods();
+				
+			}
+						
+		});
+		
+		
+		
+	}
+	
+	public void enableMods() {
+		ArrayList<String> toUpdate = new ArrayList<String>();
+		
+		Component[] c = modPane.getComponents();
+		for(int i = 3; i < c.length; i += 2) {
+			JCheckBox current = (JCheckBox)c[i];
+			if(current.isSelected()) {
+				JLabel currentLabel = (JLabel)c[i - 1];
+				toUpdate.add(currentLabel.getName().replace("label", ""));
+			}
+		}
+		
+		mm.enableMods(toUpdate);
+	}
+	
+	public void disableMods() {
+		ArrayList<String> toUpdate = new ArrayList<String>();
+		
+		Component[] c = modPane.getComponents();
+		for(int i = 3; i < c.length; i += 2) {
+			JCheckBox current = (JCheckBox)c[i];
+			if(current.isSelected()) {
+				JLabel currentLabel = (JLabel)c[i - 1];
+				toUpdate.add(currentLabel.getName().replace("label", ""));
+			}
+		}
+		
+		mm.disableMods(toUpdate);
 	}
 	
 	public void addLists() {
@@ -204,8 +258,15 @@ public class modPanel extends JPanel implements ActionListener{
 	}
 	
 	
-	public void setModStatus(Component j, String n) {
-		j.setName(n);
+	public void setModStatus(String name, int status) {
+		JLabel current = (JLabel)getComponent(name + "label");
+		Color cStatus = null;
+		if(status == -1) {
+			cStatus = Color.BLACK;
+		}else if(status == 4){
+			cStatus = Color.LIGHT_GRAY;
+		}
+		current.setForeground(cStatus);
 	}
 	
 	public void addModToList(String name) {

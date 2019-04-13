@@ -31,8 +31,9 @@ public class mod {
 	final static String MOD_FILE_URL_PATH = "config\\modManager\\modURLs.cfg";
 	
 	
-	public mod(String modFileName) {
-		this.modFileName = modFileName;
+	public mod(String mFName) {
+		this.modFileName = mFName;
+		mFName = mFName.replace(".disabled", "");
 		modName = "";
 		modURL = "";
 		
@@ -46,8 +47,8 @@ public class mod {
 			while(fileIn.hasNextLine()) {
 				input = fileIn.nextLine();
 				wholeFile = wholeFile + input + "\n";
-				if(input.contains(modFileName)) {
-					modName = input.replaceAll(modFileName + ":","");
+				if(input.contains(mFName)) {
+					modName = input.replaceAll(mFName + ":","");
 				}
 			}
 			fileIn.close();
@@ -55,7 +56,7 @@ public class mod {
 			if(modName.equals("")) {
 				findModName();
 				PrintWriter out = new PrintWriter(MOD_FILE_NAME_PATH);
-				out.println(wholeFile + modFileName + ":" + modName);
+				out.println(wholeFile + mFName + ":" + modName);
 				out.flush();
 				out.close();
 			}
@@ -69,8 +70,8 @@ public class mod {
 			String input;
 			while(fileIn.hasNextLine()) {
 				input = fileIn.nextLine();
-				if(input.contains(modFileName)) {
-					modURL = input.replaceAll(modFileName + ":","");
+				if(input.contains(mFName)) {
+					modURL = input.replaceAll(mFName + ":","");
 				}
 			}
 			fileIn.close();
@@ -85,7 +86,26 @@ public class mod {
 	}
 	
 
+	/**
+	 * -1 means cant get status
+	 * 4 means disabled
+	 * @return
+	 */
+	public int getStatus() {
+		if(modFileName.contains(".disabled")) {
+			return 4;
+		}
+		return -1;
+	}
 	
+	
+
+	public void rename(String name) {
+		File f = new File("mods\\" + modFileName);
+		f.renameTo(new File("mods\\" + name));
+		modFileName = name;
+		
+	}
 	
 	
 	/**
