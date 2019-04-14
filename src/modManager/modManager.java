@@ -1,6 +1,5 @@
 package modManager;
 
-import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -53,14 +52,34 @@ public class modManager extends Thread{
 		
 	}
 	
+	public void checkForUpdates(){
+		for(mod x : mods) {
+			x.checkForUpdate();
+		}
+	}
+	
+	
 	public void run() {
 		while(!message.equals("exit")) {
+			try {
+				Thread.sleep(250);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 			if(!message.equals("")) {
+				System.out.println(message);
 				free = false;
 			}
 			
-			if(message.contentEquals("updateModList")) {
+			if(message.equals("updateModList")) {
 				updateModList();
+				message = "";
+				free = true;
+			}
+			
+			if(message.equals("checkForUpdates")) {
+				System.out.println("got here");
+				checkForUpdates();
 				message = "";
 				free = true;
 			}
@@ -85,7 +104,7 @@ public class modManager extends Thread{
 				x.renameTo(new File(x.getPath().replace("+", "")));
 			}
 			
-			mod current = new mod(x.getName());
+			mod current = new mod(x.getName(), this);
 			
 			mods.add(current);
 			panel.addModToList(current.getName());
@@ -95,12 +114,19 @@ public class modManager extends Thread{
 		}
 		
 		
+		
+	}
+	
+	public modPanel getPanel() {
+		return panel;
 	}
 	
 	
 	public void enableMods(ArrayList<String> x) {
 		for(String y : x) {
-			panel.addToLog("Enabling " + y);
+			if(getMod(y).getFileName().contains(".disabled")) {
+				panel.addToLog("Enabling " + y);
+			}
 			getMod(y).rename(getMod(y).getFileName().replace(".disabled", ""));
 			panel.setModStatus(y, -1);
 		}

@@ -28,11 +28,19 @@ public class mod {
 	boolean isUpToDate;
 	int enabledState;
 	
+	boolean URLTestingDone;
+	
+	URLTester[] t;
+	
+	modManager m;
+	
 	final static String MOD_FILE_NAME_PATH = "config\\modManager\\modNames.cfg";
 	final static String MOD_FILE_URL_PATH = "config\\modManager\\modURLs.cfg";
 	
 	
-	public mod(String mFName) {
+	public mod(String mFName, modManager m) {
+		this.m = m;
+		URLTestingDone = false;
 		enabledState = -1;
 		this.modFileName = mFName;
 		mFName = mFName.replace(".disabled", "");
@@ -66,26 +74,9 @@ public class mod {
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
-		//search for URL
-		try {
-			Scanner fileIn = new Scanner(URLs);
-			String input;
-			while(fileIn.hasNextLine()) {
-				input = fileIn.nextLine();
-				if(input.contains(mFName)) {
-					modURL = input.replaceAll(mFName + ":","");
-				}
-			}
-			fileIn.close();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
 		
-		if(modURL.equals("")) {
-			findURL();
-			
-
-		}
+		
+	
 		
 	}
 	
@@ -100,23 +91,67 @@ public class mod {
 		
 	}
 	
+	public void checkForUpdate() {
+		File URLs = new File(MOD_FILE_URL_PATH);
+		String mFName = modFileName.replace(".disabled", "");
+		//search for URL
+				try {
+					Scanner fileIn = new Scanner(URLs);
+					String input;
+					while(fileIn.hasNextLine()) {
+						input = fileIn.nextLine();
+						if(input.contains(mFName)) {
+							modURL = input.replaceAll(mFName + ":","");
+						}
+					}
+					fileIn.close();
+				} catch (FileNotFoundException e) {
+					e.printStackTrace();
+				}
+				
+				if(modURL.equals("")) {
+					m.getPanel().addToLog("Searching for URL");
+					findURL();
+				}
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+	}
 	
 	/**
 	 * 
 	 */
 	private void findURL() {
 		ArrayList<String> names = getPossibleNames(modName);
-		//"https://minecraft.curseforge.com/projects/" + possibleURL.get(i) + "/files"
-		URLTester[] t = new URLTester[names.size()];
+		t = new URLTester[names.size()];
 		
 		for(int x = 0; x < t.length; x++) {
 			t[x] = new URLTester("https://minecraft.curseforge.com/projects/" + names.get(x) + "/files");
-			t[x].run();
+			t[x].start();
 		}
 		
+		boolean done = false;
+		while(!done) {
+			done = true;
+			for(Thread x : t) {
+				if(x.isAlive()) {
+					done = false;
+					break;
+				}
+			}
+		}
 		
-		
-		
+		URLTestingDone = true;
 	}
 	
 	public String getFileName() {
@@ -124,6 +159,10 @@ public class mod {
 	}
 	public String getName() {
 		return modName;
+	}
+	
+	public boolean isURLTestingDone() {
+		return URLTestingDone;
 	}
 	
 	public static ArrayList<String> getPossibleNames(String name) {
@@ -263,6 +302,7 @@ public class mod {
 				
 				String inputLine;
 		        while ((inputLine = br.readLine()) != null) {
+		        	
 		        	if(inputLine.contains("data-id") && !inputLine.contains("nate icon")) {
 		        		int place = 0;
 		        		for(int x = 49; x < inputLine.length(); x++) {
@@ -301,6 +341,7 @@ public class mod {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+			
 			
 		}
 		

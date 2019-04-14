@@ -143,7 +143,7 @@ public class modPanel extends JPanel implements ActionListener{
 			@Override
 			public void actionPerformed(ActionEvent arg0)
 			{
-				
+				checkForUpdates();
 			}
 		});
 		
@@ -170,6 +170,19 @@ public class modPanel extends JPanel implements ActionListener{
 		
 		
 	}
+	
+	public void checkForUpdates() {
+		progressBar.setString("Checking for updates");
+		progressBar.setMaximum((modPane.getComponentCount() / 2) - 1);
+		
+		mm.setMessage("checkForUpdates");
+		
+	}
+	
+	public void addProgress() {
+		progressBar.setValue(progressBar.getValue() + 1);
+	}
+	
 	
 	public void enableMods() {
 		ArrayList<String> toUpdate = new ArrayList<String>();
