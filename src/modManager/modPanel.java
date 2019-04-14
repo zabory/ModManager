@@ -7,6 +7,10 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.AdjustmentEvent;
+import java.awt.event.AdjustmentListener;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.util.ArrayList;
 
 import javax.swing.AbstractButton;
@@ -24,6 +28,8 @@ import javax.swing.Timer;
 import javax.swing.UIManager;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 public class modPanel extends JPanel implements ActionListener{
 
@@ -66,20 +72,22 @@ public class modPanel extends JPanel implements ActionListener{
 
 	
 	void update(){
-		if(!progressBar.getString().equals("Current task progress")) {
-			progressBar.setString(progressBar.getString().replace("" + (int)Math.round(progressBar.getPercentComplete()* 100) + "%", "") + (int)Math.round(progressBar.getPercentComplete()* 100)+ "%");
-		}
+//		if(!progressBar.getString().equals("Current task progress")) {
+//			progressBar.setString(progressBar.getString().replace((int)Math.round(progressBar.getPercentComplete()* 100) + "%", "") + (int)Math.round(progressBar.getPercentComplete()* 100)+ "%");
+//			progressBar.setStringPainted(true);
+//		}
 		
 		
 		if(mm.free) {
 			mm.update();
+			//progressBar.setString("Current task progress");
 		}
 	}
 	
 	
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		//update();
+		update();
 	}
 	
 	public void addButtons() {
@@ -172,9 +180,8 @@ public class modPanel extends JPanel implements ActionListener{
 	}
 	
 	public void checkForUpdates() {
-		progressBar.setString("Checking for updates");
+		progressBar.setString("Checking for updates:");
 		progressBar.setMaximum((modPane.getComponentCount() / 2) - 1);
-		
 		mm.setMessage("checkForUpdates");
 		
 	}
@@ -236,6 +243,7 @@ public class modPanel extends JPanel implements ActionListener{
 		
 		JScrollPane modScrollList = new JScrollPane(modPane);
 		
+		
 		modPane.setBackground(Color.WHITE);
 	   
 	    
@@ -263,6 +271,7 @@ public class modPanel extends JPanel implements ActionListener{
 	    
 	    
 	    
+	    
 	    add(listPane);
 		
 	}
@@ -276,6 +285,23 @@ public class modPanel extends JPanel implements ActionListener{
 	    progressBar.setPreferredSize(new Dimension(900, 50));
 		progressBar.setStringPainted(true);
 		progressBar.setString("Current task progress");
+		
+		
+		
+		progressBar.addChangeListener(new ChangeListener() {
+			@Override
+			public void stateChanged(ChangeEvent arg0) {
+				progressBar.setString(progressBar.getString().replace(((int)Math.round(progressBar.getPercentComplete() * 100) - 1) + "%", "") +
+						(int)Math.round(progressBar.getPercentComplete() * 100) + "%");
+				progressBar.setString(progressBar.getString().replace(((int)Math.round(progressBar.getPercentComplete() * 100)) + "%", "") +
+						(int)Math.round(progressBar.getPercentComplete() * 100) + "%");
+				
+			}
+		  });
+		
+		
+		
+		
 		add(progressBar);
 	}
 	

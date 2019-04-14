@@ -56,6 +56,7 @@ public class modManager extends Thread{
 		for(mod x : mods) {
 			x.checkForUpdate();
 		}
+		
 	}
 	
 	

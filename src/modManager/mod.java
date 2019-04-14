@@ -110,22 +110,48 @@ public class mod {
 				}
 				
 				if(modURL.equals("")) {
-					m.getPanel().addToLog("Searching for URL");
 					findURL();
 				}
 				
 				
 				
+				System.setProperty("http.agent", "Chrome");
+					URL url;
+					try {
+						url = new URL(modURL);
+						URLConnection conn = url.openConnection();
+						BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+					
+						String inputLine;
+						while ((inputLine = br.readLine()) != null) {
+			        	
+			        	if(inputLine.contains("data-id") && !inputLine.contains("nate icon")) {
+			        		int place = 0;
+			        		for(int x = 49; x < inputLine.length(); x++) {
+			        			if(inputLine.substring(x, x + 1).equals("\"")) {
+			        				place = x;
+			        				break;
+			        			}
+			        		}
+			                recievedFileName = inputLine.substring(48, place);
+			                break;
+			        	}
+			        }
+					} catch (MalformedURLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					
+				
+				
+					m.getPanel().addToLog(recievedFileName);
 				
 				
 				
-				
-				
-				
-				
-				
-				
-				
+				m.getPanel().addProgress();
 	}
 	
 	/**
