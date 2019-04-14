@@ -25,6 +25,7 @@ public class mod {
 	//This is the file name of the most current version of the mod that has been found
 	String recievedFileName;
 	//This will determine if the mod is up to date or not 
+	String downloadLink;
 	boolean isUpToDate;
 	int enabledState;
 	
@@ -113,7 +114,7 @@ public class mod {
 					findURL();
 				}
 				
-				
+				if(!modURL.equals("")) {
 				
 				System.setProperty("http.agent", "Chrome");
 					URL url;
@@ -122,18 +123,34 @@ public class mod {
 						URLConnection conn = url.openConnection();
 						BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 					
-						String inputLine;
+						String inputLine = br.readLine();
+			
 						while ((inputLine = br.readLine()) != null) {
+							
+						
 			        	
-			        	if(inputLine.contains("data-id") && !inputLine.contains("nate icon")) {
-			        		int place = 0;
-			        		for(int x = 49; x < inputLine.length(); x++) {
-			        			if(inputLine.substring(x, x + 1).equals("\"")) {
-			        				place = x;
+			        	if(inputLine.contains("<a class=\"overflow-tip twitch-link\" href=\"")) {
+			        		downloadLink = inputLine.replace("<a class=\"overflow-tip twitch-link\" href=\"", "").replace("\"", "");
+			        		for(int i = 0; i < 4; i++) {
+			        			inputLine = br.readLine();
+			        		}
+			        		for(int i = 0; i < inputLine.length(); i++) {
+			        			if(inputLine.subSequence(i, i + 9).equals("data-name")) {
+			        				int stop = 0;
+			        				for(int j = i + 9; j < inputLine.length(); j++) {
+			        					if(inputLine.substring(j, j + 2).equals("\">")) {
+			        						stop = j;
+			        						break;
+			        					}
+			        				}
+			        				recievedFileName = inputLine.substring(i + 11, stop);
+			        				System.out.println(recievedFileName);
 			        				break;
 			        			}
 			        		}
-			                recievedFileName = inputLine.substring(48, place);
+			                
+			                m.getPanel().addToLog(recievedFileName);
+			                
 			                break;
 			        	}
 			        }
@@ -144,12 +161,10 @@ public class mod {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-					
 				
-				
-					m.getPanel().addToLog(recievedFileName);
-				
-				
+				}else {
+					m.getPanel().setModStatus(modName, 0);
+				}
 				
 				m.getPanel().addProgress();
 	}
@@ -162,7 +177,7 @@ public class mod {
 		t = new URLTester[names.size()];
 		
 		for(int x = 0; x < t.length; x++) {
-			t[x] = new URLTester("https://minecraft.curseforge.com/projects/" + names.get(x) + "/files");
+			t[x] = new URLTester("https://minecraft.curseforge.com/projects/" + names.get(x) + "/files?filter-game-version=1738749986%3A628");
 			t[x].start();
 		}
 		
@@ -325,22 +340,6 @@ public class mod {
 				BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 				
 				modURL = URL;
-				
-				String inputLine;
-		        while ((inputLine = br.readLine()) != null) {
-		        	
-		        	if(inputLine.contains("data-id") && !inputLine.contains("nate icon")) {
-		        		int place = 0;
-		        		for(int x = 49; x < inputLine.length(); x++) {
-		        			if(inputLine.substring(x, x + 1).equals("\"")) {
-		        				place = x;
-		        				break;
-		        			}
-		        		}
-		                recievedFileName = inputLine.substring(48, place);
-		                break;
-		        	}
-		        }
 		        
 		        
 		        br.close();

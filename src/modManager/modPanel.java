@@ -313,6 +313,8 @@ public class modPanel extends JPanel implements ActionListener{
 			cStatus = Color.BLACK;
 		}else if(status == 4){
 			cStatus = Color.LIGHT_GRAY;
+		}else if(status == 0) {
+			cStatus = Color.RED;
 		}
 		current.setForeground(cStatus);
 	}
