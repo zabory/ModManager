@@ -315,6 +315,10 @@ public class modPanel extends JPanel implements ActionListener{
 			cStatus = Color.LIGHT_GRAY;
 		}else if(status == 0) {
 			cStatus = Color.RED;
+		}else if(status == 1) {
+			cStatus = new Color(244, 209, 66);
+		}else if(status == 2) {
+			cStatus = new Color(51, 204, 51);
 		}
 		current.setForeground(cStatus);
 	}
@@ -339,6 +343,8 @@ public class modPanel extends JPanel implements ActionListener{
 		modPane.setPreferredSize(new Dimension(modPane.getWidth(), modPane.getHeight() + jumpHeight));
 		modPane.setSize(new Dimension(modPane.getWidth(), modPane.getHeight() + jumpHeight));
 	}
+	
+	
 	
 	public void addSelectAll() {
 		String name = "Select all";

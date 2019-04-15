@@ -145,15 +145,41 @@ public class mod {
 			        				}
 			        				recievedFileName = inputLine.substring(i + 11, stop);
 			        				System.out.println(recievedFileName);
+			        				int limit = 0;
+									if(recievedFileName.length() < modFileName.length()) {
+										limit = recievedFileName.length();
+									}else {
+										limit = modFileName.length();
+									}
+									
+									boolean nope = false;
+									
+									for(int g = 0; g < limit; g++) {
+										if(modFileName.charAt(g) >= 48 && modFileName.charAt(g) <= 57) {
+											if(recievedFileName.charAt(g) >= 48 && recievedFileName.charAt(g) <= 57) {
+												if(modFileName.charAt(g) < recievedFileName.charAt(g)) {
+													m.getPanel().setModStatus(modName, 1);
+													nope = true;
+												}
+											}
+										}
+									}
+									
+									if(!nope) {
+										m.getPanel().setModStatus(modName, 2);
+									}
 			        				break;
 			        			}
 			        		}
 			                
-			                m.getPanel().addToLog(recievedFileName);
+			                
 			                
 			                break;
 			        	}
 			        }
+						
+						
+						
 					} catch (MalformedURLException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
