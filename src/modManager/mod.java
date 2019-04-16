@@ -145,27 +145,35 @@ public class mod {
 			        				}
 			        				recievedFileName = inputLine.substring(i + 11, stop);
 			        				System.out.println(recievedFileName);
-			        				int limit = 0;
-									if(recievedFileName.length() < modFileName.length()) {
-										limit = recievedFileName.length();
-									}else {
-										limit = modFileName.length();
-									}
-									
+			        				
 									boolean update = false;
 									
-									int modScore = 0;
-									int updateScore = 0;
+									double modScore = 0;
+									double updateScore = 0;
 									
-									int place = 0;
+									
 									
 									for(int x = 0; x < modFileName.length(); x++) {
 										char toTest = modFileName.charAt(x);
 										if(toTest >= 48 && toTest <= 57) {
-											modScore = (modScore * (int)Math.pow(10, place)) + Character.getNumericValue(toTest); 
+											modScore = (modScore * 10) + Character.getNumericValue(toTest); 
+											
 										}
 									}
 									
+									
+									
+									for(int x = 0; x < recievedFileName.length(); x++) {
+										char toTest = recievedFileName.charAt(x);
+										if(toTest >= 48 && toTest <= 57) {
+											updateScore = (updateScore * 10) + Character.getNumericValue(toTest); 
+											
+										}
+									}
+									System.out.println(modScore + "\n" + updateScore);
+									if(updateScore > modScore) {
+										update = true;
+									}
 									
 									
 									
