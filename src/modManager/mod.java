@@ -152,21 +152,27 @@ public class mod {
 										limit = modFileName.length();
 									}
 									
-									boolean nope = false;
+									boolean update = false;
 									
-									for(int g = 0; g < limit; g++) {
-										if(modFileName.charAt(g) >= 48 && modFileName.charAt(g) <= 57) {
-											if(recievedFileName.charAt(g) >= 48 && recievedFileName.charAt(g) <= 57) {
-												if(modFileName.charAt(g) < recievedFileName.charAt(g)) {
-													m.getPanel().setModStatus(modName, 1);
-													nope = true;
-												}
-											}
+									int modScore = 0;
+									int updateScore = 0;
+									
+									int place = 0;
+									
+									for(int x = 0; x < modFileName.length(); x++) {
+										char toTest = modFileName.charAt(x);
+										if(toTest >= 48 && toTest <= 57) {
+											modScore = (modScore * (int)Math.pow(10, place)) + Character.getNumericValue(toTest); 
 										}
 									}
 									
-									if(!nope) {
+									
+									
+									
+									if(update) {
 										m.getPanel().setModStatus(modName, 2);
+									}else {
+										m.getPanel().setModStatus(modName, 1);
 									}
 			        				break;
 			        			}

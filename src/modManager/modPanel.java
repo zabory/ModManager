@@ -72,10 +72,7 @@ public class modPanel extends JPanel implements ActionListener{
 
 	
 	void update(){
-//		if(!progressBar.getString().equals("Current task progress")) {
-//			progressBar.setString(progressBar.getString().replace((int)Math.round(progressBar.getPercentComplete()* 100) + "%", "") + (int)Math.round(progressBar.getPercentComplete()* 100)+ "%");
-//			progressBar.setStringPainted(true);
-//		}
+
 		
 		
 		if(mm.free) {
